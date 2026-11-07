@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="use-case-weather-wardrobe" name="Use Case — WeatherWardrobe">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sys" value="Система: WeatherWardrobe (Умный гардероб по погоде)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="760" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="uc1" value="Авторизоваться (Login)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="50" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc2" value="Зарегистрироваться (Register)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="120" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc3" value="Просмотреть текущую погоду (JSON)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="190" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc4" value="Просмотреть список одежды с фото" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="270" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc5" value="Подобрать одежду под температуру" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="440" y="230" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc6" value="Просмотреть страницу вещи" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="440" y="320" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc7" value="Просмотреть профиль" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="350" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc8" value="Изменить город в профиле (SharedPrefs)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="450" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc9" value="Просмотреть личный гардероб (БД Room)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="530" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc10" value="Сохранить вещь в гардероб (БД Room)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="60" y="610" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc11" value="Удалить вещь из гардероба (БД Room)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="440" y="530" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc12" value="Распознать одежду по фото (TFLite)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="sys">
+          <mxGeometry x="440" y="610" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_inc1" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;" edge="1" parent="sys" source="uc5" target="uc3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_ext1" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;" edge="1" parent="sys" source="uc5" target="uc4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_ext2" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;" edge="1" parent="sys" source="uc6" target="uc4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_ext3" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;" edge="1" parent="sys" source="uc12" target="uc10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="guest" value="Гость" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="200" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" value="Авторизованный пользователь" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="540" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="gen" value="Обобщение" style="endArrow=block;endSize=14;endFill=0;html=1;" edge="1" parent="1" source="auth" target="guest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" style="endArrow=none;html=1;" edge="1" parent="1" source="guest" target="uc1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="endArrow=none;html=1;" edge="1" parent="1" source="guest" target="uc2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="endArrow=none;html=1;" edge="1" parent="1" source="guest" target="uc3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" style="endArrow=none;html=1;" edge="1" parent="1" source="guest" target="uc4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" style="endArrow=none;html=1;" edge="1" parent="1" source="guest" target="uc7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" style="endArrow=none;html=1;" edge="1" parent="1" source="auth" target="uc8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" style="endArrow=none;html=1;" edge="1" parent="1" source="auth" target="uc9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" style="endArrow=none;html=1;" edge="1" parent="1" source="auth" target="uc10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" style="endArrow=none;html=1;" edge="1" parent="1" source="auth" target="uc11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b5" style="endArrow=none;html=1;" edge="1" parent="1" source="auth" target="uc12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
