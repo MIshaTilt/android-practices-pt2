@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NavigationDrawerApp</string>
+    <string name="menu_home">Главная</string>
+    <string name="menu_info">О приложении</string>
+    <string name="menu_profile">Профиль</string>
+    <string name="navigation_drawer_open">Открыть боковое меню</string>
+    <string name="navigation_drawer_close">Закрыть боковое меню</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.NavigationDrawerApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+    </style>
+
+    <style name="Theme.NavigationDrawerApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.NavigationDrawerApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

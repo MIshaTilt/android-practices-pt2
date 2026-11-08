@@ -612,9 +612,9 @@ interface RetrofitApiService {
   - `ProfileFragment` (формирует экран на основе авторизационных данных из Firebase Auth и `SharedPreferences`).
 
 ### Практическая работа № 7: View Binding и Navigation Component (Kotlin)
-- [ ] **Отдельные модули по ходу методички (на Kotlin):** `BottomNavigationApp`, `NavigationDrawerApp`.
-- [ ] **Контрольное задание в `WeatherWardrobe`:**
+- [x] **Отдельные модули по ходу методички (на Kotlin):** `BottomNavigationApp`, `NavigationDrawerApp`.
+- [x] **Контрольное задание в `WeatherWardrobe`:**
   - Включить `buildFeatures { viewBinding = true }` в `build.gradle.kts` и использовать `Binding`-классы во всех `Activity` и `Fragment` (с очисткой `_binding = null` в `onDestroyView()`).
   - Подключить `androidx.navigation:navigation-fragment-ktx` и `navigation-ui-ktx`.
   - Создать навигационный граф `res/navigation/nav_graph.xml` со всеми фрагментами (`CatalogFragment`, `ClothingDetailsFragment`, `WardrobeFragment`, `AiScannerFragment`, `ProfileFragment`).
-  - Разместить в `MainActivity` компоненты `NavHostFragment` и `BottomNavigationView` (или `NavigationDrawer`) и связать их через ` binding.navView.setupWithNavController(navController)`.
+  - Разместить в `MainActivity` компоненты `NavHostFragment` и `BottomNavigationView` (или `NavigationDrawer`) и связать их через `NavigationUI.setupWithNavController(binding.navView, navController)`.

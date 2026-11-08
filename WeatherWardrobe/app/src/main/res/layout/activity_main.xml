@@ -1,158 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/surface_primary"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/dividerBottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_graph" />
 
-    <!-- Bottom Navigation Bar (Figma Design System 16:1767) -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/dividerBottomNav"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/border_primary"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/surface_primary_subtle"
-        android:orientation="vertical">
+        app:itemActiveIndicatorStyle="@style/Widget.WeatherWardrobe.BottomNavIndicator"
+        app:itemIconTint="@color/bottom_nav_item_color"
+        app:itemTextColor="@color/bottom_nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_primary" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!-- Tab 1: Каталог -->
-            <LinearLayout
-                android:id="@+id/tabCatalog"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_tab_active"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="4dp">
-
-                <ImageView
-                    android:id="@+id/iconTabCatalog"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_nav_catalog" />
-
-                <TextView
-                    android:id="@+id/textTabCatalog"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Каталог"
-                    android:textColor="@color/text_info"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Tab 2: Гардероб -->
-            <LinearLayout
-                android:id="@+id/tabWardrobe"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="2dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="4dp">
-
-                <ImageView
-                    android:id="@+id/iconTabWardrobe"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_nav_wardrobe" />
-
-                <TextView
-                    android:id="@+id/textTabWardrobe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Гардероб"
-                    android:textColor="@color/text_tertiary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- Tab 3: Сканер -->
-            <LinearLayout
-                android:id="@+id/tabScanner"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="2dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="4dp">
-
-                <ImageView
-                    android:id="@+id/iconTabScanner"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_nav_scanner" />
-
-                <TextView
-                    android:id="@+id/textTabScanner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Сканер"
-                    android:textColor="@color/text_tertiary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- Tab 4: Профиль -->
-            <LinearLayout
-                android:id="@+id/tabProfile"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="4dp">
-
-                <ImageView
-                    android:id="@+id/iconTabProfile"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_nav_profile" />
-
-                <TextView
-                    android:id="@+id/textTabProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Профиль"
-                    android:textColor="@color/text_tertiary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

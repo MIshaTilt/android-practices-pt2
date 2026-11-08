@@ -5,19 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
-import ru.mirea.svinarenkomd.weatherwardrobe.R
+import ru.mirea.svinarenkomd.weatherwardrobe.databinding.FragmentProfileBinding
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.auth.AuthActivity
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.MainViewModel
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.ViewModelFactory
 
 class ProfileFragment : Fragment() {
+
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -25,8 +25,9 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,29 +38,23 @@ class ProfileFragment : Fragment() {
             ViewModelFactory(requireContext())
         ).get(MainViewModel::class.java)
 
-        val textEmail = view.findViewById<TextView>(R.id.textViewProfileEmail)
-        val textStatus = view.findViewById<TextView>(R.id.textViewProfileStatus)
-        val editCity = view.findViewById<EditText>(R.id.editTextProfileCity)
-        val buttonSaveSettings = view.findViewById<Button>(R.id.buttonSaveProfileSettings)
-        val buttonLogout = view.findViewById<Button>(R.id.buttonLogout)
-
         mainViewModel.userProfileState.observe(viewLifecycleOwner) { profile ->
             if (profile.isAuthorized) {
-                textEmail.text = profile.email
-                textStatus.text = "Статус: Личный гардероб синхронизирован"
-                buttonLogout.text = "Выйти из аккаунта"
+                binding.textViewProfileEmail.text = profile.email
+                binding.textViewProfileStatus.text = "Статус: Личный гардероб синхронизирован"
+                binding.buttonLogout.text = "Выйти из аккаунта"
             } else {
-                textEmail.text = "Гостевой режим"
-                textStatus.text = "Статус: Доступен просмотр каталога и погоды"
-                buttonLogout.text = "Войти в аккаунт"
+                binding.textViewProfileEmail.text = "Гостевой режим"
+                binding.textViewProfileStatus.text = "Статус: Доступен просмотр каталога и погоды"
+                binding.buttonLogout.text = "Войти в аккаунт"
             }
-            if (editCity.text.isNullOrBlank()) {
-                editCity.setText(profile.preferredCity)
+            if (binding.editTextProfileCity.text.isNullOrBlank()) {
+                binding.editTextProfileCity.setText(profile.preferredCity)
             }
         }
 
-        buttonSaveSettings.setOnClickListener {
-            val city = editCity.text.toString().trim().ifEmpty { "Москва" }
+        binding.buttonSaveProfileSettings.setOnClickListener {
+            val city = binding.editTextProfileCity.text.toString().trim().ifEmpty { "Москва" }
             mainViewModel.loadWeatherAndCatalog(city)
             Toast.makeText(
                 requireContext(),
@@ -68,10 +63,15 @@ class ProfileFragment : Fragment() {
             ).show()
         }
 
-        buttonLogout.setOnClickListener {
+        binding.buttonLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(requireContext(), AuthActivity::class.java))
             requireActivity().finish()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

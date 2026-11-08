@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import ru.mirea.svinarenkomd.weatherwardrobe.R
+import ru.mirea.svinarenkomd.weatherwardrobe.databinding.FragmentClothingDetailsBinding
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.MainViewModel
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.ViewModelFactory
 
 class ClothingDetailsFragment : Fragment() {
+
+    private var _binding: FragmentClothingDetailsBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -22,8 +24,9 @@ class ClothingDetailsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_clothing_details, container, false)
+    ): View {
+        _binding = FragmentClothingDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,22 +37,15 @@ class ClothingDetailsFragment : Fragment() {
             ViewModelFactory(requireContext())
         ).get(MainViewModel::class.java)
 
-        val imagePhoto = view.findViewById<ImageView>(R.id.imageViewDetailsPhoto)
-        val textTitle = view.findViewById<TextView>(R.id.textViewDetailsTitle)
-        val textCategory = view.findViewById<TextView>(R.id.textViewDetailsCategory)
-        val textDescription = view.findViewById<TextView>(R.id.textViewDetailsDescription)
-        val buttonToggleWardrobe = view.findViewById<Button>(R.id.buttonToggleWardrobe)
-        val buttonBack = view.findViewById<Button>(R.id.buttonBackToCatalog)
-
         mainViewModel.selectedClothingState.observe(viewLifecycleOwner) { item ->
             if (item == null) return@observe
 
             val minSign = if (item.minTemp > 0) "+${item.minTemp}" else "${item.minTemp}"
             val maxSign = if (item.maxTemp > 0) "+${item.maxTemp}" else "${item.maxTemp}"
 
-            textTitle.text = "${item.name} (${minSign}°C..${maxSign}°C)"
-            textCategory.text = "Категория: ${item.category}"
-            textDescription.text = item.description
+            binding.textViewDetailsTitle.text = "${item.name} (${minSign}°C..${maxSign}°C)"
+            binding.textViewDetailsCategory.text = "Категория: ${item.category}"
+            binding.textViewDetailsDescription.text = item.description
 
             val iconRes = when {
                 item.category.contains("Верхняя", ignoreCase = true) -> R.drawable.ic_clothing_outerwear
@@ -65,26 +61,31 @@ class ClothingDetailsFragment : Fragment() {
                     .error(iconRes)
                     .resize(600, 400)
                     .centerCrop()
-                    .into(imagePhoto)
+                    .into(binding.imageViewDetailsPhoto)
             } else {
-                imagePhoto.setImageResource(iconRes)
+                binding.imageViewDetailsPhoto.setImageResource(iconRes)
             }
 
             if (item.isFavorite) {
-                buttonToggleWardrobe.text = "Удалить из моего гардероба"
-                buttonToggleWardrobe.setBackgroundResource(R.drawable.bg_btn_secondary)
+                binding.buttonToggleWardrobe.text = "Удалить из моего гардероба"
+                binding.buttonToggleWardrobe.setBackgroundResource(R.drawable.bg_btn_secondary)
             } else {
-                buttonToggleWardrobe.text = "Добавить в мой гардероб"
-                buttonToggleWardrobe.setBackgroundResource(R.drawable.bg_btn_primary)
+                binding.buttonToggleWardrobe.text = "Добавить в мой гардероб"
+                binding.buttonToggleWardrobe.setBackgroundResource(R.drawable.bg_btn_primary)
             }
 
-            buttonToggleWardrobe.setOnClickListener {
+            binding.buttonToggleWardrobe.setOnClickListener {
                 mainViewModel.toggleWardrobeItem(item)
             }
         }
 
-        buttonBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+        binding.buttonBackToCatalog.setOnClickListener {
+            findNavController().popBackStack()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

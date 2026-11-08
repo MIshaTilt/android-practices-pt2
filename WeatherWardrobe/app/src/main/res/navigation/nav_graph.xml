@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_catalog">
+
+    <fragment
+        android:id="@+id/navigation_catalog"
+        android:name="ru.mirea.svinarenkomd.weatherwardrobe.presentation.catalog.CatalogFragment"
+        android:label="Каталог"
+        tools:layout="@layout/fragment_catalog">
+        <action
+            android:id="@+id/action_catalog_to_details"
+            app:destination="@id/navigation_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_wardrobe"
+        android:name="ru.mirea.svinarenkomd.weatherwardrobe.presentation.wardrobe.WardrobeFragment"
+        android:label="Гардероб"
+        tools:layout="@layout/fragment_wardrobe">
+        <action
+            android:id="@+id/action_wardrobe_to_details"
+            app:destination="@id/navigation_details" />
+        <action
+            android:id="@+id/action_wardrobe_to_scanner"
+            app:destination="@id/navigation_scanner" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_scanner"
+        android:name="ru.mirea.svinarenkomd.weatherwardrobe.presentation.scanner.AiScannerFragment"
+        android:label="Сканер"
+        tools:layout="@layout/fragment_ai_scanner" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="ru.mirea.svinarenkomd.weatherwardrobe.presentation.profile.ProfileFragment"
+        android:label="Профиль"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_details"
+        android:name="ru.mirea.svinarenkomd.weatherwardrobe.presentation.details.ClothingDetailsFragment"
+        android:label="Детали вещи"
+        tools:layout="@layout/fragment_clothing_details" />
+
+</navigation>
