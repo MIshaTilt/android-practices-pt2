@@ -10,36 +10,36 @@ class ClassifierRepositoryImpl : ClassifierRepository {
         return when {
             normalized.contains("coat") || normalized.contains("jacket") || normalized.contains("куртк") -> {
                 RecognitionResult(
-                    recognizedLabel = "trench coat (Куртка / Плащ)",
+                    recognizedLabel = "Мембранная ветровка Urban",
                     confidence = 0.94f,
-                    suggestedCategory = "Верхняя одежда (Плащ / Пальто)",
-                    suggestedMinTemp = 5,
-                    suggestedMaxTemp = 16
+                    suggestedCategory = "Верхняя одежда (Плащ / Ветровка)",
+                    suggestedMinTemp = 8,
+                    suggestedMaxTemp = 18
                 )
             }
-            normalized.contains("tee") || normalized.contains("shirt") || normalized.contains("футболк") -> {
+            normalized.contains("parka") || normalized.contains("fur") || normalized.contains("пуховик") -> {
                 RecognitionResult(
-                    recognizedLabel = "jersey, T-shirt (Футболка)",
+                    recognizedLabel = "Зимний пуховик Arctic",
+                    confidence = 0.96f,
+                    suggestedCategory = "Верхняя одежда (Зимняя куртка)",
+                    suggestedMinTemp = -25,
+                    suggestedMaxTemp = 0
+                )
+            }
+            normalized.contains("sneaker") || normalized.contains("shoe") || normalized.contains("кед") -> {
+                RecognitionResult(
+                    recognizedLabel = "Кожаные кеды Street",
                     confidence = 0.91f,
-                    suggestedCategory = "Верх (Футболка)",
-                    suggestedMinTemp = 20,
-                    suggestedMaxTemp = 35
-                )
-            }
-            normalized.contains("jean") || normalized.contains("джинс") -> {
-                RecognitionResult(
-                    recognizedLabel = "jean, blue jean (Джинсы)",
-                    confidence = 0.95f,
-                    suggestedCategory = "Низ (Джинсы / Брюки)",
-                    suggestedMinTemp = -5,
-                    suggestedMaxTemp = 22
+                    suggestedCategory = "Обувь",
+                    suggestedMinTemp = 5,
+                    suggestedMaxTemp = 25
                 )
             }
             else -> {
                 RecognitionResult(
-                    recognizedLabel = "sweatshirt (Худи / Толстовка)",
+                    recognizedLabel = "Оверсайз худи с начесом",
                     confidence = 0.92f,
-                    suggestedCategory = "Верх (Худи / Толстовка)",
+                    suggestedCategory = "Верх (Худи и свитшоты)",
                     suggestedMinTemp = 10,
                     suggestedMaxTemp = 20
                 )

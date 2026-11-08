@@ -60,6 +60,18 @@ class MainViewModel(
     private val _recognitionState = MutableLiveData<RecognitionResult?>()
     val recognitionState: LiveData<RecognitionResult?> = _recognitionState
 
+    // 5b. LiveData выбранной вещи для экрана «Детали вещи» (ClothingDetailsFragment)
+    private val _selectedClothingState = MutableLiveData<ClothingItem?>()
+    val selectedClothingState: LiveData<ClothingItem?> = _selectedClothingState
+
+    private var samplePhotoIndex = 0
+    private val samplePhotoUris = listOf(
+        "sample_hoodie_photo.jpg",
+        "sample_coat_photo.jpg",
+        "sample_parka_photo.jpg",
+        "sample_sneakers_photo.jpg"
+    )
+
     // 6. LiveData информационных сообщений / статуса действий
     private val _actionStatusState = MutableLiveData<String>()
     val actionStatusState: LiveData<String> = _actionStatusState
@@ -90,6 +102,10 @@ class MainViewModel(
                 }
             }
             combinedWardrobeState.value = merged
+            _selectedClothingState.value?.let { currentSelected ->
+                _selectedClothingState.value = merged.find { it.id == currentSelected.id }
+                    ?: currentSelected.copy(isFavorite = currentSelected.id in roomIds)
+            }
         }
 
         combinedWardrobeState.addSource(_networkCatalogLiveData) { mergeSources() }
@@ -143,6 +159,12 @@ class MainViewModel(
         val initialProfile = getUserProfileUseCase.execute()
         _userProfileState.value = initialProfile
         loadWeatherAndCatalog(initialProfile.preferredCity)
+        _selectedClothingState.value = getClothingDetailsUseCase.execute(1)
+    }
+
+    fun selectClothingItem(item: ClothingItem) {
+        val roomIds = _roomWardrobeLiveData.value.orEmpty().map { it.id }.toSet()
+        _selectedClothingState.value = item.copy(isFavorite = item.id in roomIds)
     }
 
     fun loadWeatherAndCatalog(cityInput: String) {
@@ -223,11 +245,40 @@ class MainViewModel(
                 "Ограничение доступа: ИИ-сканер TFLite доступен только авторизованным пользователям."
             return
         }
-        val result = recognizeClothingByPhotoUseCase.execute("sample_coat_photo.jpg")
+        val photoUri = samplePhotoUris[samplePhotoIndex % samplePhotoUris.size]
+        samplePhotoIndex++
+        val result = recognizeClothingByPhotoUseCase.execute(photoUri)
         _recognitionState.value = result
         _actionStatusState.value =
             "AI TFLite распознал: ${result.recognizedLabel} (${(result.confidence * 100).toInt()}%), " +
-                "рекомендуемая температура ${result.suggestedMinTemp}..${result.suggestedMaxTemp}°C"
+                "температура ${result.suggestedMinTemp}..${result.suggestedMaxTemp}°C"
+    }
+
+    fun saveRecognizedItemToWardrobe() {
+        val profile = getUserProfileUseCase.execute()
+        if (!profile.isAuthorized) {
+            _actionStatusState.value =
+                "Режим Гостя: войдите в аккаунт для сохранения распознанной вещи в БД Room."
+            return
+        }
+        val recognition = _recognitionState.value ?: recognizeClothingByPhotoUseCase.execute("sample_hoodie_photo.jpg").also {
+            _recognitionState.value = it
+        }
+        val generatedId = 100 + (recognition.recognizedLabel.hashCode() and 0x7FFFFFFF) % 900
+        val newItem = ClothingItem(
+            id = generatedId,
+            name = recognition.recognizedLabel,
+            category = recognition.suggestedCategory,
+            minTemp = recognition.suggestedMinTemp,
+            maxTemp = recognition.suggestedMaxTemp,
+            imageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600",
+            description = "Добавлено через ИИ-сканер TFLite (уверенность ${(recognition.confidence * 100).toInt()}%).",
+            isFavorite = true
+        )
+        saveClothingToWardrobeUseCase.execute(newItem)
+        _roomWardrobeLiveData.value = getUserWardrobeUseCase.execute()
+        _actionStatusState.value =
+            "Вещь «${newItem.name}» сохранена в личный гардероб (Room ★)!"
     }
 
     override fun onCleared() {

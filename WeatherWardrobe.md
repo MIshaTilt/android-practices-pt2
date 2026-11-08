@@ -603,10 +603,10 @@ interface RetrofitApiService {
 - [x] Загружать изображения вещей по `imageUrl` в `ClothingAdapter` и на странице деталей вещи через `Picasso` (или `Coil`).
 
 ### Практическая работа № 6: Фрагменты и экран Профиля (Kotlin + Fragment KTX)
-- [ ] **Отдельные модули по ходу методички (на Kotlin):** `FragmentApp`, `FragmentManagerApp`, `ResultApiFragmentApp` (с подключением `androidx.fragment:fragment-ktx:1.8.5`).
-- [ ] **Контрольное задание в `WeatherWardrobe`:** Разбить интерфейс `MainActivity` на фрагменты:
+- [x] **Отдельные модули по ходу методички (на Kotlin):** `FragmentApp`, `FragmentManagerApp`, `ResultApiFragmentApp` (с подключением `androidx.fragment:fragment-ktx:1.8.5`).
+- [x] **Контрольное задание в `WeatherWardrobe`:** Разбить интерфейс `MainActivity` на фрагменты:
   - `CatalogFragment` (список вещей `RecyclerView` + погода);
-  - `ClothingDetailsFragment` (детальная страница выбранной вещи, обмен данными через общую `MainViewModel` с помощью делегата `by activityViewModels()` или `ViewModelProvider(requireActivity())`, навигация с `addToBackStack`);
+  - `ClothingDetailsFragment` (детальная страница выбранной вещи, обмен данными через общую `MainViewModel` с помощью `ViewModelProvider(requireActivity())`, навигация с `addToBackStack`);
   - `WardrobeFragment` (список сохранённых вещей из `Room` для авторизованного пользователя);
   - `AiScannerFragment` (распознавание вещи с помощью модели `.tflite`);
   - `ProfileFragment` (формирует экран на основе авторизационных данных из Firebase Auth и `SharedPreferences`).

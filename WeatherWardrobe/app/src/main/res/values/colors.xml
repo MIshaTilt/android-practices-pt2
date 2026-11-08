@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="surface_primary">#181818</color>
+    <color name="surface_primary_subtle">#1F1F1F</color>
+    <color name="surface_secondary">#272727</color>
+    <color name="surface_secondary_subtle">#313131</color>
+
+    <color name="border_primary">#313131</color>
+    <color name="border_tertiary">#52525B</color>
+    <color name="border_action_primary">#5689C8</color>
+    <color name="border_success">#529B74</color>
+
+    <color name="text_primary">#F6F6F7</color>
+    <color name="text_secondary">#D4D4D8</color>
+    <color name="text_tertiary">#9B9B9B</color>
+    <color name="text_info">#6D99D0</color>
+    <color name="text_success">#6FCF97</color>
+
+    <color name="action_primary">#376CAD</color>
+    <color name="action_secondary">#52525B</color>
+    <color name="action_error">#782C2C</color>
 </resources>

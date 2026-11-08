@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewDetailsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Детальная информация (DetailsFragment)"
+        android:textColor="#0F172A"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDetailsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:lineSpacingExtra="4dp"
+        android:text="Выберите страну в верхнем фрагменте, чтобы увидеть подробную информацию через общую ShareViewModel."
+        android:textColor="#334155"
+        android:textSize="15sp" />
+
+</LinearLayout>

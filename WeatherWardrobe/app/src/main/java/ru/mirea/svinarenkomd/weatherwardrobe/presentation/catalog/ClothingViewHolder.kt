@@ -1,9 +1,9 @@
 package ru.mirea.svinarenkomd.weatherwardrobe.presentation.catalog
 
-import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mirea.svinarenkomd.domain.models.ClothingItem
@@ -17,18 +17,25 @@ class ClothingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val textViewSourceBadge: TextView = itemView.findViewById(R.id.textViewSourceBadge)
 
     fun bind(item: ClothingItem, onItemClick: (ClothingItem) -> Unit) {
+        val minSign = if (item.minTemp > 0) "+${item.minTemp}" else "${item.minTemp}"
+        val maxSign = if (item.maxTemp > 0) "+${item.maxTemp}" else "${item.maxTemp}"
+
         textViewClothingName.text = item.name
-        textViewCategoryAndTemp.text = "${item.category} • ${item.minTemp}..${item.maxTemp}°C"
+        textViewCategoryAndTemp.text = "${item.category} · от ${minSign}°C до ${maxSign}°C"
         textViewClothingDescription.text = item.description
 
         if (item.isFavorite) {
-            textViewSourceBadge.text = "В гардеробе ★"
-            textViewSourceBadge.setBackgroundColor(Color.parseColor("#DCFCE7"))
-            textViewSourceBadge.setTextColor(Color.parseColor("#15803D"))
+            textViewSourceBadge.text = "В гардеробе"
+            textViewSourceBadge.setBackgroundResource(R.drawable.bg_badge_saved)
+            textViewSourceBadge.setTextColor(
+                ContextCompat.getColor(itemView.context, R.color.text_success)
+            )
         } else {
-            textViewSourceBadge.text = "Каталог"
-            textViewSourceBadge.setBackgroundColor(Color.parseColor("#EEF2FF"))
-            textViewSourceBadge.setTextColor(Color.parseColor("#4338CA"))
+            textViewSourceBadge.text = "Подходит (${minSign}..${maxSign}°C)"
+            textViewSourceBadge.setBackgroundResource(R.drawable.bg_badge_info)
+            textViewSourceBadge.setTextColor(
+                ContextCompat.getColor(itemView.context, R.color.text_info)
+            )
         }
 
         val iconRes = when {

@@ -1,26 +1,28 @@
 package ru.mirea.svinarenkomd.weatherwardrobe.presentation
 
-import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import ru.mirea.svinarenkomd.weatherwardrobe.R
-import ru.mirea.svinarenkomd.weatherwardrobe.presentation.auth.AuthActivity
-import ru.mirea.svinarenkomd.weatherwardrobe.presentation.catalog.ClothingAdapter
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.catalog.CatalogFragment
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.details.ClothingDetailsFragment
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.MainViewModel
 import ru.mirea.svinarenkomd.weatherwardrobe.presentation.main.ViewModelFactory
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.profile.ProfileFragment
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.scanner.AiScannerFragment
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.wardrobe.WardrobeFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var clothingAdapter: ClothingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,77 +35,119 @@ class MainActivity : AppCompatActivity() {
             ViewModelFactory(this)
         ).get(MainViewModel::class.java)
 
-        val textUserStatus = findViewById<TextView>(R.id.textViewUserStatus)
-        val editCity = findViewById<EditText>(R.id.editTextCity)
-        val textOutput = findViewById<TextView>(R.id.textViewOutput)
-        val textListHeader = findViewById<TextView>(R.id.textViewListHeader)
-        val buttonLoadWeather = findViewById<Button>(R.id.buttonLoadWeather)
-        val buttonSaveWardrobe = findViewById<Button>(R.id.buttonSaveWardrobe)
-        val buttonRecognizePhoto = findViewById<Button>(R.id.buttonRecognizePhoto)
-        val buttonBackToAuth = findViewById<Button>(R.id.buttonBackToAuth)
-        val recyclerViewClothing = findViewById<RecyclerView>(R.id.recyclerViewClothing)
+        val tabCatalog = findViewById<LinearLayout>(R.id.tabCatalog)
+        val tabWardrobe = findViewById<LinearLayout>(R.id.tabWardrobe)
+        val tabScanner = findViewById<LinearLayout>(R.id.tabScanner)
+        val tabProfile = findViewById<LinearLayout>(R.id.tabProfile)
 
-        clothingAdapter = ClothingAdapter { clickedItem ->
-            mainViewModel.toggleWardrobeItem(clickedItem)
-        }
-        recyclerViewClothing.layoutManager = LinearLayoutManager(this)
-        recyclerViewClothing.adapter = clothingAdapter
-
-        // 1. Подписка на LiveData профиля пользователя
-        mainViewModel.userProfileState.observe(this) { profile ->
-            val roleText = if (profile.isAuthorized) {
-                "Авторизован (${profile.email})"
-            } else {
-                "Режим Гостя (только просмотр)"
-            }
-            textUserStatus.text = "$roleText • Город: ${profile.preferredCity}"
-            if (savedInstanceState == null && editCity.text.isNullOrBlank()) {
-                editCity.setText(profile.preferredCity)
-            }
-        }
-
-        // 2. Подписка на LiveData погоды
-        mainViewModel.weatherState.observe(this) { weather ->
-            textOutput.text =
-                "${weather.city}: ${weather.temperature}°C (${weather.condition}, ветер ${weather.windSpeed} м/с)\n" +
-                    "Совет: ${weather.recommendation}"
-        }
-
-        // 3. Подписка на MediatorLiveData со списком одежды (Сеть + Room) -> передаём в RecyclerView Adapter
-        mainViewModel.combinedWardrobeState.observe(this) { items ->
-            clothingAdapter.setItems(items)
-            val roomCount = items.count { it.isFavorite }
-            textListHeader.text =
-                "Список вещей (${items.size} шт., в БД Room: $roomCount) — нажмите для сохранения:"
-        }
-
-        // 4. Подписка на LiveData статусов действий (сохранение в Room / AI-распознавание)
         mainViewModel.actionStatusState.observe(this) { statusMsg ->
             if (statusMsg.isNotBlank()) {
                 Toast.makeText(this, statusMsg, Toast.LENGTH_SHORT).show()
             }
         }
 
-        buttonLoadWeather.setOnClickListener {
-            val city = editCity.text.toString().ifBlank { "Москва" }
-            mainViewModel.loadWeatherAndCatalog(city)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragmentContainerView, CatalogFragment(), TAG_CATALOG)
+                .commit()
         }
 
-        buttonSaveWardrobe.setOnClickListener {
-            mainViewModel.saveWindbreakerToWardrobe()
+        supportFragmentManager.addOnBackStackChangedListener {
+            syncActiveTabWithCurrentFragment()
         }
 
-        buttonRecognizePhoto.setOnClickListener {
-            mainViewModel.recognizeSamplePhoto()
+        tabCatalog.setOnClickListener {
+            navigateToFragment(CatalogFragment(), TAG_CATALOG)
+            highlightTab(0)
         }
 
-        buttonBackToAuth.setOnClickListener {
-            startActivity(Intent(this, AuthActivity::class.java))
-            finish()
+        tabWardrobe.setOnClickListener {
+            navigateToFragment(WardrobeFragment(), TAG_WARDROBE)
+            highlightTab(1)
+        }
+
+        tabScanner.setOnClickListener {
+            navigateToFragment(AiScannerFragment(), TAG_SCANNER)
+            highlightTab(2)
+        }
+
+        tabProfile.setOnClickListener {
+            navigateToFragment(ProfileFragment(), TAG_PROFILE)
+            highlightTab(3)
+        }
+
+        syncActiveTabWithCurrentFragment()
+    }
+
+    private fun navigateToFragment(fragment: Fragment, tag: String) {
+        val current = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
+        if (current != null && current::class == fragment::class) return
+
+        supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.fragmentContainerView, fragment, tag)
+            .addToBackStack(tag)
+            .commit()
+    }
+
+    private fun syncActiveTabWithCurrentFragment() {
+        val current = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
+        when (current) {
+            is CatalogFragment, is ClothingDetailsFragment -> highlightTab(0)
+            is WardrobeFragment -> highlightTab(1)
+            is AiScannerFragment -> highlightTab(2)
+            is ProfileFragment -> highlightTab(3)
+        }
+    }
+
+    private fun highlightTab(activeIndex: Int) {
+        val tabs = listOf(
+            Triple(
+                findViewById<LinearLayout>(R.id.tabCatalog),
+                findViewById<ImageView>(R.id.iconTabCatalog),
+                findViewById<TextView>(R.id.textTabCatalog)
+            ),
+            Triple(
+                findViewById<LinearLayout>(R.id.tabWardrobe),
+                findViewById<ImageView>(R.id.iconTabWardrobe),
+                findViewById<TextView>(R.id.textTabWardrobe)
+            ),
+            Triple(
+                findViewById<LinearLayout>(R.id.tabScanner),
+                findViewById<ImageView>(R.id.iconTabScanner),
+                findViewById<TextView>(R.id.textTabScanner)
+            ),
+            Triple(
+                findViewById<LinearLayout>(R.id.tabProfile),
+                findViewById<ImageView>(R.id.iconTabProfile),
+                findViewById<TextView>(R.id.textTabProfile)
+            )
+        )
+
+        val activeColor = ContextCompat.getColor(this, R.color.text_info)
+        val inactiveColor = ContextCompat.getColor(this, R.color.text_tertiary)
+
+        tabs.forEachIndexed { index, (container, icon, label) ->
+            if (index == activeIndex) {
+                container.setBackgroundResource(R.drawable.bg_tab_active)
+                icon.setColorFilter(activeColor)
+                label.setTextColor(activeColor)
+                label.setTypeface(null, Typeface.BOLD)
+            } else {
+                container.background = null
+                icon.setColorFilter(inactiveColor)
+                label.setTextColor(inactiveColor)
+                label.setTypeface(null, Typeface.NORMAL)
+            }
         }
     }
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val TAG_CATALOG = "catalog"
+        private const val TAG_WARDROBE = "wardrobe"
+        private const val TAG_SCANNER = "scanner"
+        private const val TAG_PROFILE = "profile"
     }
 }
