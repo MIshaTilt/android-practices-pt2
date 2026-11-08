@@ -1,0 +1,11 @@
+{
+  "name": "WeatherWardrobe Design System Builder (figma-designer)",
+  "id": "03e180d5-d14e-41bd-81b5-8a4d229e728b",
+  "api": "1.0.0",
+  "main": "code.js",
+  "documentAccess": "dynamic-page",
+  "editorType": [
+    "figma"
+  ],
+  "ui": "ui.html"
+}

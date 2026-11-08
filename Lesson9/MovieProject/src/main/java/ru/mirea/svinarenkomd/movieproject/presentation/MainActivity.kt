@@ -5,12 +5,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ru.mirea.svinarenkomd.data.repository.MovieRepositoryImpl
+import ru.mirea.svinarenkomd.data.storage.MovieStorage
+import ru.mirea.svinarenkomd.data.storage.sharedprefs.SharedPrefMovieStorage
+import ru.mirea.svinarenkomd.domain.models.Movie
+import ru.mirea.svinarenkomd.domain.repository.MovieRepository
+import ru.mirea.svinarenkomd.domain.usecases.GetFavoriteFilmUseCase
+import ru.mirea.svinarenkomd.domain.usecases.SaveFilmToFavoriteUseCase
 import ru.mirea.svinarenkomd.movieproject.R
-import ru.mirea.svinarenkomd.movieproject.data.repository.MovieRepositoryImpl
-import ru.mirea.svinarenkomd.movieproject.domain.models.Movie
-import ru.mirea.svinarenkomd.movieproject.domain.repository.MovieRepository
-import ru.mirea.svinarenkomd.movieproject.domain.usecases.GetFavoriteFilmUseCase
-import ru.mirea.svinarenkomd.movieproject.domain.usecases.SaveFilmToFavoriteUseCase
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +22,9 @@ class MainActivity : AppCompatActivity() {
 
         val text = findViewById<EditText>(R.id.editTextMovie)
         val textView = findViewById<TextView>(R.id.textViewMovie)
-        val movieRepository: MovieRepository = MovieRepositoryImpl(this)
+
+        val sharedPrefMovieStorage: MovieStorage = SharedPrefMovieStorage(this)
+        val movieRepository: MovieRepository = MovieRepositoryImpl(sharedPrefMovieStorage)
 
         findViewById<Button>(R.id.buttonSaveMovie).setOnClickListener {
             val result = SaveFilmToFavoriteUseCase(movieRepository).execute(

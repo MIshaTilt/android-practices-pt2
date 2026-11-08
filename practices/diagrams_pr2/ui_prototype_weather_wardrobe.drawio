@@ -1,0 +1,127 @@
+<mxfile host="app.diagrams.net" agent="Antigravity" version="24.7.0">
+  <diagram id="weather-wardrobe-ui-prototype" name="UI Prototype (6 Screens)">
+    <mxGraphModel dx="1600" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Screen 1: AuthActivity -->
+        <mxCell id="s1" value="1. Экран Входа (AuthActivity)&#xa;Firebase Auth" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_title" value="WeatherWardrobe&#xa;Умный гардероб по погоде" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontStyle=1;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="60" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_email" value="Email: student@mirea.ru" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;align=left;spacingLeft=10;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="135" width="210" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_pass" value="Пароль: ••••••••" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;align=left;spacingLeft=10;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="185" width="210" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_btn_login" value="Войти (Firebase Auth)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2563EB;strokeColor=#1D4ED8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="245" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_btn_reg" value="Зарегистрироваться" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B82F6;strokeColor=#2563EB;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="300" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_btn_guest" value="Продолжить как гость" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#64748B;fontColor=#334155;" vertex="1" parent="s1">
+          <mxGeometry x="20" y="365" width="210" height="38" as="geometry" />
+        </mxCell>
+
+        <!-- Screen 2: CatalogFragment -->
+        <mxCell id="s2" value="2. Каталог и Погода&#xa;(CatalogFragment)" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_weather" value="Москва: +14°C, Облачно&#xa;Ветер: 4 м/с&#xa;Совет: Наденьте ветровку и худи" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontStyle=1;fontSize=11;" vertex="1" parent="s2">
+          <mxGeometry x="15" y="55" width="220" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_item1" value="[Фото] Мембранная ветровка&#xa;Верхняя одежда | +8..+18°C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s2">
+          <mxGeometry x="15" y="145" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_item2" value="[Фото] Оверсайз худи&#xa;Верх | +8..+18°C ★ В гардеробе" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s2">
+          <mxGeometry x="15" y="220" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_item3" value="[Фото] Синие джинсы&#xa;Низ | -5..+22°C ★ В гардеробе" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s2">
+          <mxGeometry x="15" y="295" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_nav" value="[Каталог] [Гардероб] [AI] [Профиль]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#94A3B8;fontSize=10;fontStyle=1;" vertex="1" parent="s2">
+          <mxGeometry x="0" y="440" width="250" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Screen 3: ClothingDetailsFragment -->
+        <mxCell id="s3" value="3. Детали вещи&#xa;(ClothingDetailsFragment)" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="640" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_img" value="Крупное изображение вещи&#xa;(Picasso / Coil)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#94A3B8;" vertex="1" parent="s3">
+          <mxGeometry x="20" y="60" width="210" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_info" value="Мембранная ветровка Urban&#xa;Категория: Верхняя одежда&#xa;Температура: +8°C ... +18°C&#xa;&#xa;Лёгкая непродуваемая куртка с водоотталкивающей пропиткой." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s3">
+          <mxGeometry x="20" y="215" width="210" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_btn" value="Сохранить в гардероб (Room)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s3">
+          <mxGeometry x="20" y="370" width="210" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Screen 4: WardrobeFragment -->
+        <mxCell id="s4" value="4. Личный гардероб&#xa;(WardrobeFragment - БД Room)" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="940" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_hdr" value="Мои сохранённые вещи (Room DB)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontStyle=1;fontSize=11;" vertex="1" parent="s4">
+          <mxGeometry x="15" y="55" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_w1" value="★ Оверсайз худи (+8..+18°C)&#xa;[Удалить из Room]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s4">
+          <mxGeometry x="15" y="110" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_w2" value="★ Синие джинсы (-5..+22°C)&#xa;[Удалить из Room]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s4">
+          <mxGeometry x="15" y="190" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_btn_scan" value="+ Сканировать вещь (AI TFLite)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=#6D28D9;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s4">
+          <mxGeometry x="15" y="370" width="220" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_nav" value="[Каталог] [Гардероб] [AI] [Профиль]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#94A3B8;fontSize=10;fontStyle=1;" vertex="1" parent="s4">
+          <mxGeometry x="0" y="440" width="250" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Screen 5: AiScannerFragment -->
+        <mxCell id="s5" value="5. ИИ-Сканер одежды&#xa;(AiScannerFragment - TFLite)" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_preview" value="Превью фото одежды&#xa;(224x224 RGB для EfficientNet-Lite0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#9333EA;fontSize=11;" vertex="1" parent="s5">
+          <mxGeometry x="20" y="60" width="210" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_btn_run" value="Распознать через TFLite" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=#6D28D9;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s5">
+          <mxGeometry x="20" y="205" width="210" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_res" value="Результат TFLite:&#xa;Класс: sweatshirt (Худи) - 92%&#xa;Категория: Верх&#xa;Температура: +10°C ... +20°C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="s5">
+          <mxGeometry x="20" y="255" width="210" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_btn_save" value="Добавить в мой гардероб" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s5">
+          <mxGeometry x="20" y="365" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_nav" value="[Каталог] [Гардероб] [AI] [Профиль]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#94A3B8;fontSize=10;fontStyle=1;" vertex="1" parent="s5">
+          <mxGeometry x="0" y="440" width="250" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Screen 6: ProfileFragment -->
+        <mxCell id="s6" value="6. Профиль пользователя&#xa;(ProfileFragment - SharedPrefs)" style="swimlane;startSize=40;rounded=1;fillColor=#F8FAFC;strokeColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="60" width="250" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="s6_status" value="Firebase Auth: Авторизован&#xa;Email: student@mirea.ru" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontStyle=1;fontSize=11;" vertex="1" parent="s6">
+          <mxGeometry x="20" y="60" width="210" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s6_city" value="Любимый город: Москва" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;align=left;spacingLeft=10;" vertex="1" parent="s6">
+          <mxGeometry x="20" y="145" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s6_btn_city" value="Сохранить город (SharedPrefs)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2563EB;strokeColor=#1D4ED8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s6">
+          <mxGeometry x="20" y="200" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s6_btn_logout" value="Выйти из аккаунта" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EF4444;strokeColor=#DC2626;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="s6">
+          <mxGeometry x="20" y="365" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s6_nav" value="[Каталог] [Гардероб] [AI] [Профиль]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#94A3B8;fontSize=10;fontStyle=1;" vertex="1" parent="s6">
+          <mxGeometry x="0" y="440" width="250" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

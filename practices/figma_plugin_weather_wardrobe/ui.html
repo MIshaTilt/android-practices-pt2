@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>WeatherWardrobe — Figma Designer Builder</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #181818;
+      color: #F6F6F7;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 18px;
+    }
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #FFFFFF;
+    }
+    p.sub {
+      font-size: 12px;
+      color: #B0B0B8;
+      margin-bottom: 14px;
+    }
+    .group {
+      background: #272727;
+      border: 1px solid #313131;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    label {
+      color: #D4D4D8;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    select {
+      background: #1F1F1F;
+      color: #F6F6F7;
+      border: 1px solid #3F3F46;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #3D78C0;
+      cursor: pointer;
+    }
+    .status {
+      background: #1F1F1F;
+      border: 1px solid #313131;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #B0B0B8;
+      margin-bottom: 12px;
+      min-height: 36px;
+    }
+    .status.error {
+      border-color: #C25E5E;
+      color: #E2ACAC;
+    }
+    .status.done {
+      border-color: #4CA676;
+      color: #9FD4B7;
+    }
+    button {
+      width: 100%;
+      min-height: 40px;
+      background: #3D78C0;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 12px;
+    }
+    button:hover {
+      background: #32639F;
+    }
+    button:disabled {
+      background: #284E7E;
+      color: #9B9B9B;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h2>WeatherWardrobe Design Builder</h2>
+  <p class="sub">Генератор нативного макета Figma по правилам скилла figma-designer</p>
+
+  <div class="group">
+    <div class="row">
+      <label for="theme">Тема по умолчанию (Color System)</label>
+      <select id="theme">
+        <option value="Dark" selected>Dark Mode</option>
+        <option value="Light">Light Mode</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="removeCode">Удалить старый слой Code (1:3)</label>
+      <input type="checkbox" id="removeCode" checked />
+    </div>
+    <div class="row">
+      <label for="buildFoundations">Собрать страницу Foundations</label>
+      <input type="checkbox" id="buildFoundations" checked />
+    </div>
+    <div class="row">
+      <label for="buildComponents">Собрать страницу Components</label>
+      <input type="checkbox" id="buildComponents" checked />
+    </div>
+    <div class="row">
+      <label for="buildScreens">Собрать страницу Screens (6 экранов)</label>
+      <input type="checkbox" id="buildScreens" checked />
+    </div>
+  </div>
+
+  <div id="status" class="status">Готов к созданию редактируемых слоёв, переменных и компонентов</div>
+
+  <button id="buildBtn" type="button">Собрать нативный макет в Figma</button>
+
+  <script>
+    const buildBtn = document.getElementById('buildBtn');
+    const statusEl = document.getElementById('status');
+
+    buildBtn.addEventListener('click', () => {
+      const theme = document.getElementById('theme').value === 'Light' ? 'Light' : 'Dark';
+      const removeCodeLayer = document.getElementById('removeCode').checked;
+      const buildFoundations = document.getElementById('buildFoundations').checked;
+      const buildComponents = document.getElementById('buildComponents').checked;
+      const buildScreens = document.getElementById('buildScreens').checked;
+
+      if (!buildFoundations && !buildComponents && !buildScreens) {
+        statusEl.textContent = 'Выберите хотя бы одну страницу для генерации';
+        statusEl.className = 'status error';
+        return;
+      }
+
+      buildBtn.disabled = true;
+      statusEl.textContent = 'Запуск генерации дизайн-системы...';
+      statusEl.className = 'status';
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'build-design-system',
+          theme,
+          removeCodeLayer,
+          buildFoundations,
+          buildComponents,
+          buildScreens
+        }
+      }, '*');
+    });
+
+    window.onmessage = (event) => {
+      const msg = event.data && event.data.pluginMessage;
+      if (!msg || msg.type !== 'status') return;
+      statusEl.textContent = msg.text;
+      statusEl.className = msg.isError ? 'status error' : (msg.done ? 'status done' : 'status');
+      if (msg.done) {
+        buildBtn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>

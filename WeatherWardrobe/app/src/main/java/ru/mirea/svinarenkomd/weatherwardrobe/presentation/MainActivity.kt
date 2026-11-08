@@ -1,27 +1,29 @@
 package ru.mirea.svinarenkomd.weatherwardrobe.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ru.mirea.svinarenkomd.data.network.NetworkApi
+import ru.mirea.svinarenkomd.data.repository.ClassifierRepositoryImpl
+import ru.mirea.svinarenkomd.data.repository.ClothingRepositoryImpl
+import ru.mirea.svinarenkomd.data.repository.UserRepositoryImpl
+import ru.mirea.svinarenkomd.data.repository.WeatherRepositoryImpl
+import ru.mirea.svinarenkomd.data.storage.room.RoomClothingStorage
+import ru.mirea.svinarenkomd.data.storage.sharedprefs.SharedPrefUserStorage
+import ru.mirea.svinarenkomd.domain.models.ClothingItem
+import ru.mirea.svinarenkomd.domain.usecases.GetClothingCatalogUseCase
+import ru.mirea.svinarenkomd.domain.usecases.GetClothingDetailsUseCase
+import ru.mirea.svinarenkomd.domain.usecases.GetCurrentWeatherUseCase
+import ru.mirea.svinarenkomd.domain.usecases.GetUserProfileUseCase
+import ru.mirea.svinarenkomd.domain.usecases.GetUserWardrobeUseCase
+import ru.mirea.svinarenkomd.domain.usecases.RecognizeClothingByPhotoUseCase
+import ru.mirea.svinarenkomd.domain.usecases.SaveClothingToWardrobeUseCase
+import ru.mirea.svinarenkomd.domain.usecases.SavePreferredCityUseCase
 import ru.mirea.svinarenkomd.weatherwardrobe.R
-import ru.mirea.svinarenkomd.weatherwardrobe.data.repository.AuthRepositoryImpl
-import ru.mirea.svinarenkomd.weatherwardrobe.data.repository.ClassifierRepositoryImpl
-import ru.mirea.svinarenkomd.weatherwardrobe.data.repository.ClothingRepositoryImpl
-import ru.mirea.svinarenkomd.weatherwardrobe.data.repository.UserRepositoryImpl
-import ru.mirea.svinarenkomd.weatherwardrobe.data.repository.WeatherRepositoryImpl
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.models.ClothingItem
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.GetClothingCatalogUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.GetClothingDetailsUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.GetCurrentWeatherUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.GetUserProfileUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.GetUserWardrobeUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.LoginUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.LogoutUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.RecognizeClothingByPhotoUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.SaveClothingToWardrobeUseCase
-import ru.mirea.svinarenkomd.weatherwardrobe.domain.usecases.SavePreferredCityUseCase
+import ru.mirea.svinarenkomd.weatherwardrobe.presentation.auth.AuthActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,123 +31,141 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val editTextCity = findViewById<EditText>(R.id.editTextCity)
-        val textViewOutput = findViewById<TextView>(R.id.textViewOutput)
+        // Инициализация 3 механизмов хранения/получения данных в модуле :data
+        val userStorage = SharedPrefUserStorage(this)
+        val clothingStorage = RoomClothingStorage(this)
+        val networkApi = NetworkApi()
 
-        // Инициализация репозиториев (Context передаётся только в data-слой)
-        val authRepository = AuthRepositoryImpl(this)
-        val userRepository = UserRepositoryImpl(this)
-        val weatherRepository = WeatherRepositoryImpl()
-        val clothingRepository = ClothingRepositoryImpl()
+        // Репозитории из модуля :data
+        val clothingRepository = ClothingRepositoryImpl(clothingStorage, networkApi)
+        val weatherRepository = WeatherRepositoryImpl(networkApi)
+        val userRepository = UserRepositoryImpl(userStorage)
         val classifierRepository = ClassifierRepositoryImpl()
 
-        // Инициализация UseCase-классов слоя domain
-        val getUserProfileUseCase = GetUserProfileUseCase(userRepository)
-        val savePreferredCityUseCase = SavePreferredCityUseCase(userRepository)
+        // UseCases из модуля :domain
         val getCurrentWeatherUseCase = GetCurrentWeatherUseCase(weatherRepository)
         val getClothingCatalogUseCase = GetClothingCatalogUseCase(clothingRepository)
         val getClothingDetailsUseCase = GetClothingDetailsUseCase(clothingRepository)
         val getUserWardrobeUseCase = GetUserWardrobeUseCase(clothingRepository)
         val saveClothingToWardrobeUseCase = SaveClothingToWardrobeUseCase(clothingRepository)
         val recognizeClothingByPhotoUseCase = RecognizeClothingByPhotoUseCase(classifierRepository)
-        val loginUseCase = LoginUseCase(authRepository)
-        val logoutUseCase = LogoutUseCase(authRepository)
+        val getUserProfileUseCase = GetUserProfileUseCase(userRepository)
+        val savePreferredCityUseCase = SavePreferredCityUseCase(userRepository)
 
-        val initialProfile = getUserProfileUseCase.execute()
-        editTextCity.setText(initialProfile.preferredCity)
+        val textUserStatus = findViewById<TextView>(R.id.textViewUserStatus)
+        val editCity = findViewById<EditText>(R.id.editTextCity)
+        val textOutput = findViewById<TextView>(R.id.textViewOutput)
+        val buttonLoadWeather = findViewById<Button>(R.id.buttonLoadWeather)
+        val buttonSaveWardrobe = findViewById<Button>(R.id.buttonSaveWardrobe)
+        val buttonRecognizePhoto = findViewById<Button>(R.id.buttonRecognizePhoto)
+        val buttonBackToAuth = findViewById<Button>(R.id.buttonBackToAuth)
 
-        fun renderSummary(extraNote: String = "") {
+        fun updateProfileHeader() {
             val profile = getUserProfileUseCase.execute()
-            val activeCity = if (profile.isAuthorized) profile.preferredCity else "Москва (по умолчанию для Гостя)"
-            val weather = getCurrentWeatherUseCase.execute(if (profile.isAuthorized) profile.preferredCity else "Москва")
+            val roleText = if (profile.isAuthorized) {
+                "Авторизован (${profile.email})"
+            } else {
+                "Режим Гостя (только просмотр)"
+            }
+            textUserStatus.text = "Профиль (SharedPreferences): $roleText | Любимый город: ${profile.preferredCity}"
+        }
+
+        fun loadWeatherAndCatalog(city: String) {
+            val profile = getUserProfileUseCase.execute()
+            if (profile.isAuthorized) {
+                savePreferredCityUseCase.execute(city)
+            }
+            updateProfileHeader()
+
+            val weather = getCurrentWeatherUseCase.execute(city)
             val recommended = getClothingCatalogUseCase.execute(weather.temperature)
+            val detailsSample = getClothingDetailsUseCase.execute(1)
 
             val sb = StringBuilder()
-            if (extraNote.isNotEmpty()) {
-                sb.appendLine(extraNote)
-                sb.appendLine("---")
-            }
-            sb.appendLine("Режим: ${if (profile.isAuthorized) "Авторизован (${profile.email})" else "Гость"}")
-            sb.appendLine("Город: $activeCity")
-            sb.appendLine("Погода: ${weather.city}, ${weather.temperature}°C, ${weather.condition}, ветер ${weather.windSpeed} м/с")
+            sb.appendLine("=== ПОГОДА (NetworkApi) ===")
+            sb.appendLine("Город: ${weather.city}")
+            sb.appendLine("Температура: ${weather.temperature}°C (${weather.condition}, ветер ${weather.windSpeed} м/с)")
+            sb.appendLine("Совет: ${weather.recommendation}")
             sb.appendLine()
-            sb.appendLine("Рекомендовано по погоде (${recommended.size} шт.):")
+            sb.appendLine("=== ПОДБОР ИЗ КАТАЛОГА (${recommended.size} шт.) ===")
             recommended.forEach { item ->
-                sb.appendLine(" • ${item.name} [${item.minTemp}°C..${item.maxTemp}°C] (${item.category})")
+                val badge = if (item.isFavorite) " [В гардеробе Room]" else ""
+                sb.appendLine("• ${item.name} [${item.category}] (${item.minTemp}..${item.maxTemp}°C)$badge")
             }
             sb.appendLine()
             if (profile.isAuthorized) {
                 val wardrobe = getUserWardrobeUseCase.execute()
-                sb.appendLine("Мой гардероб (${wardrobe.size} шт.):")
+                sb.appendLine("=== МОЙ ГАРДЕРОБ (БД Room: ${wardrobe.size} шт.) ===")
                 wardrobe.forEach { item ->
-                    sb.appendLine(" • #${item.id} ${item.name} (${item.category})")
+                    sb.appendLine("★ ${item.name} — ${item.category}")
                 }
             } else {
-                sb.appendLine("Мой гардероб и ИИ-сканер: недоступны для Гостя (требуется вход)")
+                sb.appendLine("=== МОЙ ГАРДЕРОБ (БД Room) ===")
+                sb.appendLine("Недоступно в режиме Гостя. Войдите через Firebase Auth для работы с личным гардеробом.")
             }
-            textViewOutput.text = sb.toString()
+            detailsSample?.let {
+                sb.appendLine()
+                sb.appendLine("=== ДЕТАЛИ ВЕЩИ #1 ===")
+                sb.appendLine("${it.name}: ${it.description}")
+            }
+            textOutput.text = sb.toString()
         }
 
-        renderSummary("Каркас WeatherWardrobe успешно инициализирован.")
+        val initialProfile = getUserProfileUseCase.execute()
+        editCity.setText(initialProfile.preferredCity)
+        loadWeatherAndCatalog(initialProfile.preferredCity)
 
-        findViewById<Button>(R.id.buttonSaveCity).setOnClickListener {
+        buttonLoadWeather.setOnClickListener {
+            val city = editCity.text.toString().ifBlank { "Москва" }
+            loadWeatherAndCatalog(city)
+        }
+
+        buttonSaveWardrobe.setOnClickListener {
             val profile = getUserProfileUseCase.execute()
             if (!profile.isAuthorized) {
-                renderSummary("Ошибка доступа: Гость не может менять город по умолчанию (доступна только Москва).")
+                textOutput.text = "Ограничение доступа: Гость не может сохранять вещи в БД Room. Пожалуйста, войдите через экран авторизации."
                 return@setOnClickListener
             }
-            val cityInput = editTextCity.text.toString()
-            val saved = savePreferredCityUseCase.execute(cityInput)
-            renderSummary("SavePreferredCityUseCase: result = $saved")
-        }
-
-        findViewById<Button>(R.id.buttonShowCatalog).setOnClickListener {
-            val allCatalog = getClothingCatalogUseCase.execute()
-            val firstDetails = getClothingDetailsUseCase.execute(1)
-            val note = buildString {
-                appendLine("Весь каталог (${allCatalog.size} вещей):")
-                allCatalog.forEach { appendLine(" - ${it.name}: ${it.minTemp}..${it.maxTemp}°C") }
-                if (firstDetails != null) {
-                    append("Детали вещи #1: ${firstDetails.description}")
-                }
-            }
-            renderSummary(note)
-        }
-
-        findViewById<Button>(R.id.buttonTestAiScanner).setOnClickListener {
-            val profile = getUserProfileUseCase.execute()
-            if (!profile.isAuthorized) {
-                renderSummary("Ошибка доступа: ИИ-сканер (TFLite) и сохранение в гардероб доступны только авторизованным пользователям.")
-                return@setOnClickListener
-            }
-            val aiResult = recognizeClothingByPhotoUseCase.execute("trench")
             val newItem = ClothingItem(
-                id = 0,
-                name = "Распознано ИИ: ${aiResult.detectedLabel}",
-                category = aiResult.mappedCategory,
-                minTemp = aiResult.recommendedMinTemp,
-                maxTemp = aiResult.recommendedMaxTemp,
-                imageUrl = "",
-                description = "Точность TFLite: ${(aiResult.confidence * 100).toInt()}%"
+                id = 1,
+                name = "Мембранная ветровка Urban",
+                category = "Верхняя одежда (Плащ / Пальто / Ветровка)",
+                minTemp = 8,
+                maxTemp = 18,
+                imageUrl = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600",
+                description = "Лёгкая непродуваемая куртка с водоотталкивающей пропиткой.",
+                isFavorite = true
             )
             val saved = saveClothingToWardrobeUseCase.execute(newItem)
-            renderSummary(
-                "RecognizeClothingByPhotoUseCase:\n" +
-                    "Класс: ${aiResult.detectedLabel} (${(aiResult.confidence * 100).toInt()}%)\n" +
-                    "Категория: ${aiResult.mappedCategory}\n" +
-                    "Сохранено в гардероб: $saved"
-            )
+            val wardrobe = getUserWardrobeUseCase.execute()
+            textOutput.text = buildString {
+                appendLine("Сохранение в БД Room выполнено: $saved")
+                appendLine("Текущий личный гардероб из Room (${wardrobe.size} шт.):")
+                wardrobe.forEach { item ->
+                    appendLine("★ [#${item.id}] ${item.name} (${item.minTemp}..${item.maxTemp}°C)")
+                }
+            }
         }
 
-        findViewById<Button>(R.id.buttonToggleAuth).setOnClickListener {
-            val current = getUserProfileUseCase.execute()
-            if (current.isAuthorized) {
-                logoutUseCase.execute()
-                renderSummary("Выполнен LogoutUseCase -> Режим Гостя")
-            } else {
-                loginUseCase.execute("svinarenko@mirea.ru", "123456")
-                renderSummary("Выполнен LoginUseCase -> Авторизован (svinarenko@mirea.ru)")
+        buttonRecognizePhoto.setOnClickListener {
+            val profile = getUserProfileUseCase.execute()
+            if (!profile.isAuthorized) {
+                textOutput.text = "Ограничение доступа: ИИ-сканер доступен только авторизованным пользователям."
+                return@setOnClickListener
             }
+            val result = recognizeClothingByPhotoUseCase.execute("sample_coat_photo.jpg")
+            textOutput.text = buildString {
+                appendLine("=== РЕЗУЛЬТАТ AI-СКАНЕРА (TFLite) ===")
+                appendLine("Распознанный класс: ${result.recognizedLabel}")
+                appendLine("Уверенность модели: ${(result.confidence * 100).toInt()}%")
+                appendLine("Категория: ${result.suggestedCategory}")
+                appendLine("Рекомендуемая температура: ${result.suggestedMinTemp}..${result.suggestedMaxTemp}°C")
+            }
+        }
+
+        buttonBackToAuth.setOnClickListener {
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
         }
     }
 }

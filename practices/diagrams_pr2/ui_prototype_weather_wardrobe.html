@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeatherWardrobe — Прототип 6 экранов (Практика № 2)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      background: #0F172A;
+      color: #F8FAFC;
+      padding: 32px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #F8FAFC;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 15px;
+      color: #94A3B8;
+    }
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      max-width: 2100px;
+      margin: 0 auto;
+    }
+    .phone-frame {
+      background: #FFFFFF;
+      color: #1E293B;
+      border-radius: 32px;
+      border: 8px solid #1E293B;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      height: 660px;
+      overflow: hidden;
+      position: relative;
+    }
+    .status-bar {
+      background: #1E293B;
+      color: #CBD5E1;
+      font-size: 11px;
+      padding: 8px 18px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+    .app-bar {
+      background: #2563EB;
+      color: #FFFFFF;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .app-bar .badge {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    .content {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #F8FAFC;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+    .weather-card {
+      background: linear-gradient(135deg, #2563EB, #0284C7);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .weather-card .temp {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 4px 0;
+    }
+    .weather-card .advice {
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.16);
+      padding: 8px 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .input-group label {
+      font-size: 12px;
+      color: #64748B;
+      font-weight: 600;
+    }
+    .input-box {
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #0F172A;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #2563EB;
+      color: #FFFFFF;
+    }
+    .btn-secondary {
+      background: #3B82F6;
+      color: #FFFFFF;
+    }
+    .btn-success {
+      background: #16A34A;
+      color: #FFFFFF;
+    }
+    .btn-purple {
+      background: #7C3AED;
+      color: #FFFFFF;
+    }
+    .btn-danger {
+      background: #EF4444;
+      color: #FFFFFF;
+    }
+    .btn-outline {
+      background: #FFFFFF;
+      border: 1.5px solid #94A3B8;
+      color: #334155;
+    }
+    .item-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .item-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: #DBEAFE;
+      color: #1D4ED8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .item-info h4 {
+      font-size: 14px;
+      color: #0F172A;
+      margin-bottom: 2px;
+    }
+    .item-info p {
+      font-size: 12px;
+      color: #64748B;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .tag-blue { background: #DBEAFE; color: #1D4ED8; }
+    .tag-green { background: #DCFCE7; color: #15803D; }
+    .tag-purple { background: #F3E8FF; color: #6D28D9; }
+    .bottom-nav {
+      background: #FFFFFF;
+      border-top: 1px solid #E2E8F0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+      color: #64748B;
+    }
+    .bottom-nav .active {
+      color: #2563EB;
+      font-weight: 700;
+    }
+    .hero-img {
+      height: 150px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #DBEAFE, #EDE9FE);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #1E40AF;
+      font-weight: 700;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>WeatherWardrobe («Умный гардероб по погоде») — Прототип 6 экранов</h1>
+    <p>РТУ МИРЭА • Свинаренко М.Д. (БСБО-09-23) • Clean Architecture (:app, :domain, :data) + Firebase Auth + Room + Retrofit + TFLite</p>
+  </div>
+
+  <div class="screens-grid">
+
+    <!-- ЭКРАН 1: AuthActivity -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>1. Авторизация</span>
+        <span class="badge">AuthActivity</span>
+      </div>
+      <div class="content">
+        <div class="card" style="text-align:center; background:#EFF6FF; border-color:#BFDBFE;">
+          <div style="font-size:32px; margin-bottom:4px;">🧥⛅</div>
+          <h3 style="font-size:18px; color:#1E3A8A;">WeatherWardrobe</h3>
+          <p style="font-size:12px; color:#475569; margin-top:4px;">Вход через Firebase Authentication</p>
+        </div>
+
+        <div class="card" style="background:#F1F5F9; font-size:12px; color:#334155;">
+          <strong>Статус:</strong> Не авторизован<br/>
+          <strong>Хранилище:</strong> FirebaseAuth + SharedPrefUserStorage
+        </div>
+
+        <div class="input-group">
+          <label>Email пользователя</label>
+          <div class="input-box">student@mirea.ru</div>
+        </div>
+
+        <div class="input-group">
+          <label>Пароль (минимум 6 символов)</label>
+          <div class="input-box">••••••••</div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:8px;">Войти (Firebase Auth)</button>
+        <button class="btn btn-secondary">Зарегистрироваться (Firebase Auth)</button>
+        <button class="btn btn-outline" style="margin-top:auto;">Продолжить как гость</button>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 2: CatalogFragment -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>2. Каталог и Погода</span>
+        <span class="badge">CatalogFragment</span>
+      </div>
+      <div class="content">
+        <div class="weather-card">
+          <div style="display:flex; justify-content:space-between; font-size:13px;">
+            <span>📍 Москва</span>
+            <span>Ветер 4 м/с</span>
+          </div>
+          <div class="temp">+14°C • Облачно</div>
+          <div class="advice">💡 Совет: прохладно, подойдут мембранная ветровка, худи и джинсы.</div>
+        </div>
+
+        <div style="font-size:12px; font-weight:700; color:#475569;">ПОДБОР ПО ПОГОДЕ (RecyclerView):</div>
+
+        <div class="card item-row">
+          <div class="item-thumb">🧥</div>
+          <div class="item-info">
+            <h4>Мембранная ветровка Urban</h4>
+            <p>Верхняя одежда • +8°C ... +18°C</p>
+            <span class="tag tag-blue">Подходит к +14°C</span>
+          </div>
+        </div>
+
+        <div class="card item-row">
+          <div class="item-thumb">👕</div>
+          <div class="item-info">
+            <h4>Оверсайз худи с начёсом</h4>
+            <p>Верх (Худи) • +8°C ... +18°C</p>
+            <span class="tag tag-green">★ В гардеробе Room</span>
+          </div>
+        </div>
+
+        <div class="card item-row">
+          <div class="item-thumb">👖</div>
+          <div class="item-info">
+            <h4>Классические синие джинсы</h4>
+            <p>Низ (Джинсы) • -5°C ... +22°C</p>
+            <span class="tag tag-green">★ В гардеробе Room</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="active">🌤 Каталог</div>
+        <div>🚪 Гардероб</div>
+        <div>🤖 AI-Сканер</div>
+        <div>👤 Профиль</div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 3: ClothingDetailsFragment -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>3. Детали вещи</span>
+        <span class="badge">DetailsFragment</span>
+      </div>
+      <div class="content">
+        <div class="hero-img">
+          <span style="font-size:46px;">🧥</span>
+          <span>Фото вещи (Picasso / Coil)</span>
+        </div>
+
+        <div class="card">
+          <span class="tag tag-blue">Верхняя одежда (Ветровка)</span>
+          <h3 style="font-size:18px; margin-top:8px; color:#0F172A;">Мембранная ветровка Urban</h3>
+          <p style="font-size:13px; color:#2563EB; font-weight:700; margin-top:4px;">
+            Температурный режим: +8°C ... +18°C
+          </p>
+          <p style="font-size:13px; color:#475569; margin-top:10px; line-height:1.45;">
+            Лёгкая непродуваемая куртка с водоотталкивающей пропиткой для прохладной и ветреной погоды. Защищает от дождя и ветра до 12 м/с.
+          </p>
+        </div>
+
+        <div class="card" style="background:#F0FDF4; border-color:#BBF7D0; font-size:12px; color:#166534;">
+          ✅ Доступно авторизованному пользователю: сохранение в локальную БД <strong>Room (wardrobe_items)</strong>.
+        </div>
+
+        <button class="btn btn-success" style="margin-top:auto;">★ Добавить в мой гардероб (Room)</button>
+      </div>
+      <div class="bottom-nav">
+        <div class="active">🌤 Каталог</div>
+        <div>🚪 Гардероб</div>
+        <div>🤖 AI-Сканер</div>
+        <div>👤 Профиль</div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 4: WardrobeFragment -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>4. Мой гардероб</span>
+        <span class="badge">WardrobeFragment</span>
+      </div>
+      <div class="content">
+        <div class="card" style="background:#ECFDF5; border-color:#A7F3D0;">
+          <h4 style="font-size:14px; color:#065F46;">Локальная БД Room (WardrobeDatabase)</h4>
+          <p style="font-size:12px; color:#047857; margin-top:2px;">Сохранено вещей: 3 шт. (доступно офлайн)</p>
+        </div>
+
+        <div class="card item-row">
+          <div class="item-thumb">🧥</div>
+          <div class="item-info" style="flex:1;">
+            <h4>Мембранная ветровка Urban</h4>
+            <p>+8°C ... +18°C • Добавлено сегодня</p>
+          </div>
+        </div>
+
+        <div class="card item-row">
+          <div class="item-thumb">👕</div>
+          <div class="item-info" style="flex:1;">
+            <h4>Оверсайз худи с начёсом</h4>
+            <p>+8°C ... +18°C • В избранном</p>
+          </div>
+        </div>
+
+        <div class="card item-row">
+          <div class="item-thumb">👖</div>
+          <div class="item-info" style="flex:1;">
+            <h4>Классические синие джинсы</h4>
+            <p>-5°C ... +22°C • В избранном</p>
+          </div>
+        </div>
+
+        <button class="btn btn-purple" style="margin-top:auto;">📸 Сканировать вещь камерой (AI TFLite)</button>
+      </div>
+      <div class="bottom-nav">
+        <div>🌤 Каталог</div>
+        <div class="active">🚪 Гардероб</div>
+        <div>🤖 AI-Сканер</div>
+        <div>👤 Профиль</div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 5: AiScannerFragment -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>5. ИИ-Сканер TFLite</span>
+        <span class="badge">AiScannerFragment</span>
+      </div>
+      <div class="content">
+        <div class="hero-img" style="background:linear-gradient(135deg, #F3E8FF, #E0E7FF); color:#6D28D9;">
+          <span style="font-size:44px;">📷👕</span>
+          <span>Превью фото (224×224 RGB)</span>
+          <span style="font-size:11px; font-weight:500;">Модель: EfficientNet-Lite0.tflite</span>
+        </div>
+
+        <button class="btn btn-purple">🔍 Распознать вещь с помощью TFLite</button>
+
+        <div class="card" style="border-color:#DDD6FE; background:#FAF5FF;">
+          <span class="tag tag-purple">Результат нейросети TFLite</span>
+          <h4 style="font-size:15px; color:#4C1D95; margin-top:8px;">Класс: sweatshirt (Худи / Толстовка)</h4>
+          <p style="font-size:13px; color:#5B21B6; margin-top:4px;">Уверенность (Confidence): <strong>92%</strong></p>
+          <p style="font-size:12px; color:#6D28D9; margin-top:6px;">
+            Назначенная категория: <strong>Верх</strong><br/>
+            Рекомендуемая температура: <strong>+10°C ... +20°C</strong>
+          </p>
+        </div>
+
+        <button class="btn btn-success" style="margin-top:auto;">💾 Сохранить распознанную вещь в Room</button>
+      </div>
+      <div class="bottom-nav">
+        <div>🌤 Каталог</div>
+        <div>🚪 Гардероб</div>
+        <div class="active">🤖 AI-Сканер</div>
+        <div>👤 Профиль</div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН 6: ProfileFragment -->
+    <div class="phone-frame">
+      <div class="status-bar"><span>09:41</span><span>5G • 100%</span></div>
+      <div class="app-bar">
+        <span>6. Профиль клиента</span>
+        <span class="badge">ProfileFragment</span>
+      </div>
+      <div class="content">
+        <div class="card" style="text-align:center;">
+          <div style="font-size:36px;">👤</div>
+          <h3 style="font-size:16px; margin-top:6px;">student@mirea.ru</h3>
+          <span class="tag tag-green">Авторизован через Firebase Auth</span>
+          <p style="font-size:11px; color:#64748B; margin-top:6px;">UID: Rl7y9BW71eH1ZEViXEGeSFSOs1</p>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size:13px; color:#334155; margin-bottom:8px;">Настройки SharedPreferences</h4>
+          <div class="input-group">
+            <label>Любимый город для прогноза погоды</label>
+            <div class="input-box">Москва</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%; margin-top:10px;">Сохранить город в SharedPreferences</button>
+        </div>
+
+        <div class="card" style="font-size:12px; color:#475569;">
+          <strong>Права доступа роли:</strong><br/>
+          • Просмотр погоды и каталога: Да<br/>
+          • Личный гардероб (БД Room): Да<br/>
+          • ИИ-сканер (TFLite): Да
+        </div>
+
+        <button class="btn btn-danger" style="margin-top:auto;">Выйти из аккаунта (Firebase signOut)</button>
+      </div>
+      <div class="bottom-nav">
+        <div>🌤 Каталог</div>
+        <div>🚪 Гардероб</div>
+        <div>🤖 AI-Сканер</div>
+        <div class="active">👤 Профиль</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

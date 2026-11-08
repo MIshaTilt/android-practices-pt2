@@ -577,13 +577,13 @@ interface RetrofitApiService {
 - [x] **Контрольное задание (стр. 27):** Создать на Kotlin проект `ru.mirea.svinarenkomd.weatherwardrobe` (`Empty Views Activity`, Language: `Kotlin`). Создать пакеты `domain` (`models`, `repository`, `usecases`), `data` (`repository`), `presentation`. Создать `data class`-модели, интерфейсы репозиториев и все классы `UseCase`. В `ClothingRepositoryImpl` и `WeatherRepositoryImpl` вернуть тестовые данные и вывести их на экран `MainActivity`.
 
 ### Практическая работа № 2: Модульность, Storage, Room, Firebase Auth (Kotlin)
-- [ ] **В отчёт:** Сделать прототип экранов приложения в **Figma** (по разделу 7).
-- [ ] **Модули:** Вынести пакет `domain` в отдельный модуль `:domain` (`Java or Kotlin Library`, Language: `Kotlin`), а пакет `data` — в модуль `:data` (`Android Library`, Language: `Kotlin`). Прописать модули в `settings.gradle.kts`.
-- [ ] **Storage и раздельные модели:** В модуле `:data` создать пакет `storage`, отдельные модели (`ClothingEntity`, `UserPrefsModel`) и файл `Mappers.kt` с extension-функциями `toEntity()` / `toDomain()`. Реализовать **3 способа обработки данных**:
+- [x] **В отчёт:** Сделать прототип экранов приложения в **Figma** (по разделу 7 — создан файл в Figma: https://www.figma.com/design/kYcB0cBCITZ9qTZ6PM1fuy?node-id=1-3 , а также локальные копии `practices/diagrams_pr2/ui_prototype_weather_wardrobe.html` и `practices/diagrams_pr2/ui_prototype_weather_wardrobe.drawio`).
+- [x] **Модули:** Вынести пакет `domain` в отдельный модуль `:domain` (`Java or Kotlin Library`, Language: `Kotlin`), а пакет `data` — в модуль `:data` (`Android Library`, Language: `Kotlin`). Прописать модули в `settings.gradle.kts`.
+- [x] **Storage и раздельные модели:** В модуле `:data` создать пакет `storage`, отдельные модели (`ClothingEntity`, `UserPrefsModel`) и файл `Mappers.kt` с extension-функциями `toEntity()` / `toDomain()`. Реализовать **3 способа обработки данных**:
   1. `SharedPrefUserStorage` (`SharedPreferences` — инфо о клиенте: email, выбранный город).
   2. `RoomClothingStorage` (`Room` — БД личного гардероба `WardrobeDatabase` и `@Dao interface WardrobeDao`).
   3. `NetworkApi` (класс для работы с сетью с замоканными данными о погоде и одежде).
-- [ ] **Авторизация:** Создать `AuthActivity.kt` (на этапе Пр. 2 — локальная авторизация через `AuthRepository` и `SharedPreferences`; подключение проекта **Firebase Auth** перенесено на Пр. 6).
+- [x] **Авторизация:** Создать `AuthActivity.kt` и подключить **Firebase Authentication** (`google-services.json`, `FirebaseAuth.getInstance()`) с распределением логики авторизации по 3 модулям (`:app`, `:domain`, `:data`).
 
 ### Практическая работа № 3: Архитектура MVVM, ViewModel, LiveData, MediatorLiveData (Kotlin)
 - [ ] **ViewModel + Factory:** Создать `MainViewModel : ViewModel()` и `ViewModelFactory(private val context: Context) : ViewModelProvider.Factory`. Перенести вызовы `UseCase` из `MainActivity` в `MainViewModel`.
