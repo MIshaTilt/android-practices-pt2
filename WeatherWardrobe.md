@@ -586,9 +586,9 @@ interface RetrofitApiService {
 - [x] **Авторизация:** Создать `AuthActivity.kt` и подключить **Firebase Authentication** (`google-services.json`, `FirebaseAuth.getInstance()`) с распределением логики авторизации по 3 модулям (`:app`, `:domain`, `:data`).
 
 ### Практическая работа № 3: Архитектура MVVM, ViewModel, LiveData, MediatorLiveData (Kotlin)
-- [ ] **ViewModel + Factory:** Создать `MainViewModel : ViewModel()` и `ViewModelFactory(private val context: Context) : ViewModelProvider.Factory`. Перенести вызовы `UseCase` из `MainActivity` в `MainViewModel`.
-- [ ] **LiveData:** Использовать `MutableLiveData` и публичное свойство `val weatherState: LiveData<WeatherInfo>` внутри `MainViewModel`. Подписаться в `MainActivity` через лямбду Kotlin: `vm.weatherState.observe(this) { info -> ... }`.
-- [ ] **MediatorLiveData:** Создать в `MainViewModel` свойство `val combinedWardrobeState = MediatorLiveData<List<ClothingItem>>()`, объединяющее данные из сетевой части (`NetworkApi`) и локальной БД (`Room`).
+- [x] **ViewModel + Factory:** Создать `MainViewModel : ViewModel()`, `AuthViewModel : ViewModel()` и `ViewModelFactory(context: Context) : ViewModelProvider.Factory`. Перенести вызовы `UseCase` из `MainActivity` и `AuthActivity` во `ViewModel`.
+- [x] **LiveData:** Использовать `MutableLiveData` и публичное свойство `val weatherState: LiveData<WeatherInfo>` внутри `MainViewModel`. Подписаться в `MainActivity` через лямбду Kotlin: `vm.weatherState.observe(this) { info -> ... }`.
+- [x] **MediatorLiveData:** Создать в `MainViewModel` свойство `val combinedWardrobeState = MediatorLiveData<List<ClothingItem>>()`, объединяющее данные из сетевой части (`NetworkApi`) и локальной БД (`Room`).
 
 ### Практическая работа № 4: Списки и RecyclerView (Kotlin)
 - [ ] **Отдельные модули по ходу методички (на Kotlin):** `ScrollViewApp` (геометрическая прогрессия), `ListViewApp` (30+ книг), `RecyclerView` (исторические события).
