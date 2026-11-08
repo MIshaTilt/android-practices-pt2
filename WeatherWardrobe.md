@@ -591,10 +591,10 @@ interface RetrofitApiService {
 - [x] **MediatorLiveData:** Создать в `MainViewModel` свойство `val combinedWardrobeState = MediatorLiveData<List<ClothingItem>>()`, объединяющее данные из сетевой части (`NetworkApi`) и локальной БД (`Room`).
 
 ### Практическая работа № 4: Списки и RecyclerView (Kotlin)
-- [ ] **Отдельные модули по ходу методички (на Kotlin):** `ScrollViewApp` (геометрическая прогрессия), `ListViewApp` (30+ книг), `RecyclerView` (исторические события).
-- [ ] **Контрольное задание в `WeatherWardrobe`:** Создать разметку карточки вещи `item_clothing.xml` (`CardView` + `ConstraintLayout`).
-- [ ] Реализовать `ClothingViewHolder` и `ClothingAdapter(private val onItemClick: (ClothingItem) -> Unit) : RecyclerView.Adapter<ClothingViewHolder>()`.
-- [ ] Передать список вещей из репозитория через `LiveData<List<ClothingItem>>` во `ViewModel` и отобразить в `RecyclerView`.
+- [x] **Отдельные модули по ходу методички (на Kotlin):** `ScrollViewApp` (геометрическая прогрессия), `ListViewApp` (30+ книг), `RecyclerViewApp` (исторические события).
+- [x] **Контрольное задание в `WeatherWardrobe`:** Создать разметку карточки вещи `item_clothing.xml` (`CardView` + `ConstraintLayout`).
+- [x] Реализовать `ClothingViewHolder` и `ClothingAdapter(private val onItemClick: (ClothingItem) -> Unit) : RecyclerView.Adapter<ClothingViewHolder>()`.
+- [x] Передать список вещей из репозитория через `LiveData<List<ClothingItem>>` во `ViewModel` и отобразить в `RecyclerView`.
 
 ### Практическая работа № 5: Сеть Retrofit и изображения Picasso / Coil (Kotlin)
 - [ ] **Отдельный модуль по ходу методички (на Kotlin):** `RetrofitApp` (`JSONPlaceholder Todos` + `CheckBox` обновление + `Picasso`).

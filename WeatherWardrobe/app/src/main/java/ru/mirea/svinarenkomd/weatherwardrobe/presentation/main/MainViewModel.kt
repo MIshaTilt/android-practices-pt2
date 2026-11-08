@@ -196,6 +196,26 @@ class MainViewModel(
         _roomWardrobeLiveData.value = getUserWardrobeUseCase.execute()
     }
 
+    fun toggleWardrobeItem(item: ClothingItem) {
+        val profile = getUserProfileUseCase.execute()
+        if (!profile.isAuthorized) {
+            _actionStatusState.value =
+                "Режим Гостя: войдите в аккаунт, чтобы сохранять вещи («${item.name}») в БД Room."
+            return
+        }
+        if (item.isFavorite) {
+            removeClothingFromWardrobeUseCase.execute(item.id)
+            _roomWardrobeLiveData.value = getUserWardrobeUseCase.execute()
+            _actionStatusState.value =
+                "Вещь «${item.name}» удалена из личного гардероба (Room)."
+        } else {
+            saveClothingToWardrobeUseCase.execute(item.copy(isFavorite = true))
+            _roomWardrobeLiveData.value = getUserWardrobeUseCase.execute()
+            _actionStatusState.value =
+                "Вещь «${item.name}» добавлена в личный гардероб (Room ★)!"
+        }
+    }
+
     fun recognizeSamplePhoto() {
         val profile = getUserProfileUseCase.execute()
         if (!profile.isAuthorized) {
