@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ru.mirea.svinarenkomd.domain.models.ClothingItem
 import ru.mirea.svinarenkomd.weatherwardrobe.R
 
@@ -36,7 +37,18 @@ class ClothingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             item.category.contains("Обувь", ignoreCase = true) -> R.drawable.ic_clothing_shoes
             else -> R.drawable.ic_clothing_top
         }
-        imageViewClothing.setImageResource(iconRes)
+
+        if (item.imageUrl.isNotBlank()) {
+            Picasso.get()
+                .load(item.imageUrl)
+                .placeholder(iconRes)
+                .error(iconRes)
+                .resize(200, 200)
+                .centerCrop()
+                .into(imageViewClothing)
+        } else {
+            imageViewClothing.setImageResource(iconRes)
+        }
 
         itemView.setOnClickListener {
             onItemClick(item)

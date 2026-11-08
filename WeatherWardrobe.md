@@ -597,10 +597,10 @@ interface RetrofitApiService {
 - [x] Передать список вещей из репозитория через `LiveData<List<ClothingItem>>` во `ViewModel` и отобразить в `RecyclerView`.
 
 ### Практическая работа № 5: Сеть Retrofit и изображения Picasso / Coil (Kotlin)
-- [ ] **Отдельный модуль по ходу методички (на Kotlin):** `RetrofitApp` (`JSONPlaceholder Todos` + `CheckBox` обновление + `Picasso`).
-- [ ] **Контрольное задание в `WeatherWardrobe`:** Подключить `com.squareup.retrofit2:retrofit:2.11.0`, `converter-gson:2.11.0` и `com.squareup.picasso:picasso:2.8` (или Kotlin-библиотеку `io.coil-kt:coil:2.7.0`) + разрешение `android.permission.INTERNET`.
-- [ ] Реализовать получение списка одежды и погоды из внешнего JSON-сервиса через `RetrofitApiService` (`call.enqueue(object : Callback<List<ClothingDto>> { ... })`), обработать `response.isSuccessful` и `onFailure`.
-- [ ] Загружать изображения вещей по `imageUrl` в `ClothingAdapter` и на странице деталей вещи через `Picasso` (или `Coil`).
+- [x] **Отдельный модуль по ходу методички (на Kotlin):** `RetrofitApp` (`JSONPlaceholder Todos` + `CheckBox` обновление + `Picasso`).
+- [x] **Контрольное задание в `WeatherWardrobe`:** Подключить `com.squareup.retrofit2:retrofit:2.11.0`, `converter-gson:2.11.0` и `com.squareup.picasso:picasso:2.8` (или Kotlin-библиотеку `io.coil-kt:coil:2.7.0`) + разрешение `android.permission.INTERNET`.
+- [x] Реализовать получение списка одежды и погоды из внешнего JSON-сервиса через `RetrofitApiService` (`call.enqueue(object : Callback<List<ClothingDto>> { ... })`), обработать `response.isSuccessful` и `onFailure`.
+- [x] Загружать изображения вещей по `imageUrl` в `ClothingAdapter` и на странице деталей вещи через `Picasso` (или `Coil`).
 
 ### Практическая работа № 6: Фрагменты и экран Профиля (Kotlin + Fragment KTX)
 - [ ] **Отдельные модули по ходу методички (на Kotlin):** `FragmentApp`, `FragmentManagerApp`, `ResultApiFragmentApp` (с подключением `androidx.fragment:fragment-ktx:1.8.5`).

@@ -40,6 +40,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.room.runtime)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     implementation(libs.firebase.auth)
     testImplementation(libs.junit)
 }
